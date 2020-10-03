@@ -1,4 +1,4 @@
-import { html, slot } from "react-wc-adapter";
+import { html, slot } from "react-wc";
 
 export const AppStyle = html`
   <style>

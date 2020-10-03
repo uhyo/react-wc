@@ -12,7 +12,7 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js"],
     alias: {
-      "react-wc-adapter": path.join(__dirname, "../")
+      "react-wc": path.join(__dirname, "../")
     }
   },
   module: {
