@@ -1,3 +1,4 @@
+const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
@@ -7,7 +8,10 @@ module.exports = {
     filename: 'bundle.js'
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"]
+    extensions: [".ts", ".tsx", ".js"],
+    alias: {
+      "react-wc-adapter": path.join(__dirname, "../")
+    }
   },
   module: {
     rules: [
