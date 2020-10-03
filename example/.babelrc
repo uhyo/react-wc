@@ -1,0 +1,4 @@
+{
+  "plugins": ["@babel/plugin-syntax-typescript", "@babel/plugin-syntax-jsx"],
+  "presets": ["linaria/babel"]
+}

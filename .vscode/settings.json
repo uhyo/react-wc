@@ -1,6 +1,6 @@
 {
-  "lit-html.tags": [
-    "html",
-    "wc"
-  ]
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "lit-html.tags": ["html", "wc"]
 }

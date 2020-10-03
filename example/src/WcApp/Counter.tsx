@@ -4,7 +4,7 @@ export const Counters = html`
   <style>
     div {
       display: grid;
-      grid: auto-flow / repeat(8, 80px);
+      grid: auto-flow / repeat(16, 80px);
       gap: 10px;
     }
   </style>
