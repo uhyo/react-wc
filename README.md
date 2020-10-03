@@ -56,6 +56,10 @@ The developer experience is very close to the standard Web Components.
 
 Also, it is intentionally not really powerful so it cannot contain any logic. This helps decoupling logic components and styling components.
 
+## What About Syntax Highlighting?
+
+To get the `html` string syntax-highlighted on VSCode, use [the VSCode plugin for lit-html](https://marketplace.visualstudio.com/items?itemName=bierner.lit-html).
+
 ## Advanced Usage
 
 Specifying multiple slots:
