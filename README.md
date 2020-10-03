@@ -107,6 +107,7 @@ Named slots can be filled by a prop with the same name:
 ## Future Roadmap
 
 - [ ] Move some code to build-time
+- [ ] Support JSX-based API?
 - [ ] SSR Support?
 
 ## Contributing
