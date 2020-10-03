@@ -1,13 +1,15 @@
 import React from "react";
 import { generateElementName } from "./generateElementName";
+import { Slot } from "./Slot";
+import { slotNameSymbol } from "./symbol";
 import { resolveTemplateString } from "./util/resolveTemplateString";
 
 /**
  * Creates a component from given HTML string.
  */
-export function html(
+export function html<SlotName extends string>(
   html: TemplateStringsArray,
-  ...values: readonly unknown[]
+  ...values: readonly Slot<SlotName>[]
 ): React.ComponentType {
   const elementName = generateElementName();
   let initFlag = false;
@@ -32,5 +34,13 @@ export function html(
       window.customElements.define(elementName, Elm);
     }
     return React.createElement(elementName, {}, props.children);
+  };
+}
+
+export function slot(): Slot<"">;
+export function slot<Name extends string>(name: Name): Slot<Name>;
+export function slot(name?: string): Slot<string> {
+  return {
+    [slotNameSymbol]: name || "",
   };
 }

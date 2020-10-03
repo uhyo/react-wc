@@ -1,4 +1,4 @@
-import { html } from "react-wc-adapter";
+import { html, slot } from "react-wc-adapter";
 
 export const Counters = html`
   <style>
@@ -8,7 +8,7 @@ export const Counters = html`
       gap: 10px;
     }
   </style>
-  <div><slot></slot></div>
+  <div>${slot()}</div>
 `;
 
 export const Counter = html`
@@ -26,7 +26,5 @@ export const Counter = html`
       font-size: 1.5em;
     }
   </style>
-  <div>
-    <slot></slot>
-  </div>
+  <div>${slot()}</div>
 `;
