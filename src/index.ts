@@ -6,37 +6,48 @@ import { Slot } from "./Slot";
 import { slotNameSymbol } from "./symbol";
 import { resolveTemplateString } from "./util/resolveTemplateString";
 
+export type WCComponent<SlotName extends string> = React.FunctionComponent<
+  HtmlComponentProps<SlotName>
+> & {
+  readonly elementName: string;
+};
+
 /**
  * Creates a component from given HTML string.
  */
 export function html<SlotName extends string>(
   html: TemplateStringsArray,
   ...values: readonly Slot<SlotName>[]
-): React.ComponentType<HtmlComponentProps<SlotName>> {
+): WCComponent<SlotName> {
   const elementName = generateElementName();
   let initFlag = false;
   const template = document.createDocumentFragment();
   const [templateString, slotNames] = resolveTemplateString(html, values);
-  return (props) => {
-    if (!initFlag) {
-      initFlag = true;
-      // parse HTML string into DOM nodes
-      const div = document.createElement("div");
-      div.insertAdjacentHTML("afterbegin", templateString);
-      template.append(...div.childNodes);
-      class Elm extends HTMLElement {
-        constructor() {
-          super();
-          this.attachShadow({
-            mode: "open",
-          }).appendChild(template.cloneNode(true));
+  return Object.assign(
+    (props: React.PropsWithChildren<HtmlComponentProps<SlotName>>) => {
+      if (!initFlag) {
+        initFlag = true;
+        // parse HTML string into DOM nodes
+        const div = document.createElement("div");
+        div.insertAdjacentHTML("afterbegin", templateString);
+        template.append(...div.childNodes);
+        class Elm extends HTMLElement {
+          constructor() {
+            super();
+            this.attachShadow({
+              mode: "open",
+            }).appendChild(template.cloneNode(true));
+          }
         }
+        window.customElements.define(elementName, Elm);
       }
-      window.customElements.define(elementName, Elm);
+      const children = makeChildren(props, slotNames);
+      return React.createElement(elementName, {}, children);
+    },
+    {
+      elementName,
     }
-    const children = makeChildren(props, slotNames);
-    return React.createElement(elementName, {}, children);
-  };
+  );
 }
 
 export function slot(): Slot<"">;
