@@ -33,13 +33,13 @@ export const Counters = html`
 <wc-9pseu4w3rao-1>
   #shadow-root
     <style>
-    div {
-      display: grid;
-      grid: auto-flow / repeat(16, 80px);
-      gap: 10px;
-    }
-    </style>
-  <div><slot></slot></div>
+      div {
+        display: grid;
+        grid: auto-flow / repeat(16, 80px);
+        gap: 10px;
+      }
+      </style>
+    <div><slot></slot></div>
   children...
 </wc-9pseu4w3rao-1>
 ```
