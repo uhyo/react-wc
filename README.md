@@ -100,6 +100,10 @@ Named slots can be filled by a prop with the same name:
 </AppStyle>
 ```
 
+## Further Reading
+
+- [Blog article (日本語)](https://blog.uhy.ooo/entry/2020-10-03/react-wc/)
+
 ## Future Roadmap
 
 - [ ] Move some code to build-time
