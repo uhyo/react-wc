@@ -1,12 +1,13 @@
 {
   "name": "react-wc",
   "version": "0.1.0",
-  "description": "",
+  "description": "React wrapper for Web Components",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,5 +20,9 @@
   },
   "peerDependencies": {
     "react": "^16.13.1"
-  }
+  },
+  "files": [
+    "src/**/*",
+    "lib/**/*"
+  ]
 }
