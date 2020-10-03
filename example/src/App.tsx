@@ -12,7 +12,10 @@ export const App: React.FC = () => {
     <div>
       <p>
         Mode{" "}
-        <select onChange={(e) => setMode(e.currentTarget.value as any)}>
+        <select
+          onChange={(e) => setMode(e.currentTarget.value as any)}
+          value={mode}
+        >
           {modes.map((value) => (
             <option key={value}>{value}</option>
           ))}

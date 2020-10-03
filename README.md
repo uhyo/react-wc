@@ -38,7 +38,7 @@ export const Counters = html`
         grid: auto-flow / repeat(16, 80px);
         gap: 10px;
       }
-      </style>
+    </style>
     <div><slot></slot></div>
   children...
 </wc-9pseu4w3rao-1>
