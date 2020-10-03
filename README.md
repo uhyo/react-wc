@@ -46,7 +46,7 @@ export const Counters = html`
 
 ## Use Cases
 
-Useful for doing Web Components-based CSS in JS. According author's measurement, generated components are as fast as [linaria](https://github.com/callstack/linaria) and are twice as fast as [styled-components](https://styled-components.com/).
+Useful for doing Web Components-based CSS in JS. According to author's measurement, generated components are as fast as [linaria](https://github.com/callstack/linaria) and are twice as fast as [styled-components](https://styled-components.com/).
 
 This repository has the `example/` directory where you can compare the speed of `react-wc`, `linaria` and `styled-components`.
 
@@ -55,6 +55,8 @@ This repository has the `example/` directory where you can compare the speed of 
 The developer experience is very close to the standard Web Components.
 
 Also, it is intentionally not really powerful so it cannot contain any logic. This helps decoupling logic components and styling components.
+
+Another point is that `react-wc` can pack up **HTML Structure with styles**, not just single element with styles.
 
 ## What About Syntax Highlighting?
 
