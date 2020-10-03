@@ -2,10 +2,12 @@ import { html, slot } from "react-wc-adapter";
 
 export const AppStyle = html`
   <style>
-    div {
-      display: grid;
-      grid: auto-flow / repeat(16, 80px);
-      gap: 10px;
+    header {
+      border: 1px solid #cccccc;
+      padding: 4px;
+    }
+    p {
+      border-bottom: 1px dashed #999999;
     }
   </style>
   <header>${slot("header")}</header>

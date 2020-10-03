@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { range } from "../util/range";
-import { AppStyle, Counter, Counters, CounterValue } from "./Counter";
+import { AppStyle, Counter, Counters, CounterValue } from "./elements";
 
 export const WcApp: React.FC = () => {
   const [counter, setCounter] = useState(0);
