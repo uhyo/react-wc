@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`html no slot 1`] = `
+"
+      <style>
+        div {
+          font-size: 100px;
+        }
+      </style>
+      <div>Hello</div>
+    "
+`;
+
+exports[`html no slot 2`] = `""`;

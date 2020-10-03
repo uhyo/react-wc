@@ -1,4 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { render } from "@testing-library/react";
+import React from "react";
 import { html } from "..";
 
 describe("html", () => {
@@ -14,6 +16,9 @@ describe("html", () => {
 
     render(<Hello />);
 
-    screen.
+    const el = document.getElementsByTagName(Hello.elementName)[0];
+
+    expect(el.shadowRoot?.innerHTML).toMatchSnapshot();
+    expect(el.innerHTML).toMatchSnapshot();
   });
 });
