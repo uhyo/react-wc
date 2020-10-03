@@ -1,5 +1,7 @@
 import React from "react";
 import { generateElementName } from "./generateElementName";
+import { HtmlComponentProps } from "./HtmlComponentProps";
+import { makeChildren } from "./makeChildren";
 import { Slot } from "./Slot";
 import { slotNameSymbol } from "./symbol";
 import { resolveTemplateString } from "./util/resolveTemplateString";
@@ -10,11 +12,11 @@ import { resolveTemplateString } from "./util/resolveTemplateString";
 export function html<SlotName extends string>(
   html: TemplateStringsArray,
   ...values: readonly Slot<SlotName>[]
-): React.ComponentType {
+): React.ComponentType<HtmlComponentProps<SlotName>> {
   const elementName = generateElementName();
   let initFlag = false;
   const template = document.createDocumentFragment();
-  const templateString = resolveTemplateString(html, values);
+  const [templateString, slotNames] = resolveTemplateString(html, values);
   return (props) => {
     if (!initFlag) {
       initFlag = true;
@@ -22,7 +24,6 @@ export function html<SlotName extends string>(
       const div = document.createElement("div");
       div.insertAdjacentHTML("afterbegin", templateString);
       template.append(...div.childNodes);
-      console.log(templateString);
       class Elm extends HTMLElement {
         constructor() {
           super();
@@ -33,7 +34,8 @@ export function html<SlotName extends string>(
       }
       window.customElements.define(elementName, Elm);
     }
-    return React.createElement(elementName, {}, props.children);
+    const children = makeChildren(props, slotNames);
+    return React.createElement(elementName, {}, children);
   };
 }
 

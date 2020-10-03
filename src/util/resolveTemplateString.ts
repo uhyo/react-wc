@@ -2,22 +2,23 @@ import { Slot } from "../Slot";
 import { slotNameSymbol } from "../symbol";
 import { range } from "./range";
 
-export function resolveTemplateString(
+export function resolveTemplateString<SlotName extends string>(
   arr: TemplateStringsArray,
-  values: readonly Slot<string>[]
-): string {
+  values: readonly Slot<SlotName>[]
+): [string, Exclude<SlotName, "children" | "">[]] {
   let result = arr[0];
+  const slotNames = [];
   for (const i of range(0, values.length)) {
     const slotName = values[i][slotNameSymbol];
-    if (slotName) {
+    if (slotName && slotName !== "children") {
       result += `<slot name="${escapeName(slotName)}"></slot>`;
+      slotNames.push(slotName as Exclude<SlotName, "children" | "">);
     } else {
       result += "<slot></slot>";
     }
     result += arr[i + 1];
   }
-  console.log(result, arr, values);
-  return result;
+  return [result, slotNames];
 }
 
 function replacer(char: string) {

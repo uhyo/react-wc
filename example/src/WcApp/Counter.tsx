@@ -1,5 +1,27 @@
 import { html, slot } from "react-wc-adapter";
 
+export const AppStyle = html`
+  <style>
+    div {
+      display: grid;
+      grid: auto-flow / repeat(16, 80px);
+      gap: 10px;
+    }
+  </style>
+  <header>${slot("header")}</header>
+  <p>Counter value is ${slot("counter")}</p>
+  <main>${slot()}</main>
+`;
+
+export const CounterValue = html`
+  <style>
+    :host {
+      font-weight: bold;
+    }
+  </style>
+  ${slot()}
+`;
+
 export const Counters = html`
   <style>
     div {
