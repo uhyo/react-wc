@@ -26,43 +26,56 @@ exports[`html Named slot values text 1`] = `"<wc-text slot=\\"child\\">foobar</w
 
 exports[`html Named slot values undefined 1`] = `"<wc-text slot=\\"child\\"></wc-text>"`;
 
-exports[`html multiple slots 1`] = `
+exports[`html basic multiple slots 1`] = `
 "
-      <style>
-        div {
-          font-size: 100px;
-        }
-      </style>
-      <header><slot name=\\"header\\"></slot></header>
-      <div><slot></slot></div>
-      <header><slot name=\\"footer\\"></slot></header>
-    "
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <header><slot name=\\"header\\"></slot></header>
+        <div><slot></slot></div>
+        <header><slot name=\\"footer\\"></slot></header>
+      "
 `;
 
-exports[`html multiple slots 2`] = `"<b slot=\\"header\\">head!</b><wc-text slot=\\"footer\\">foo!</wc-text><span>Foobar</span>"`;
+exports[`html basic multiple slots 2`] = `"<b slot=\\"header\\">head!</b><wc-text slot=\\"footer\\">foo!</wc-text><span>Foobar</span>"`;
 
-exports[`html no slot 1`] = `
+exports[`html basic no slot 1`] = `
 "
-      <style>
-        div {
-          font-size: 100px;
-        }
-      </style>
-      <div>Hello</div>
-    "
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <div>Hello</div>
+      "
 `;
 
-exports[`html no slot 2`] = `""`;
+exports[`html basic no slot 2`] = `""`;
 
-exports[`html one slot 1`] = `
+exports[`html basic one slot 1`] = `
 "
-      <style>
-        div {
-          font-size: 100px;
-        }
-      </style>
-      <div><slot></slot></div>
-    "
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <div><slot></slot></div>
+      "
 `;
 
-exports[`html one slot 2`] = `"<span>Foobar</span>"`;
+exports[`html basic one slot 2`] = `"<span>Foobar</span>"`;
+
+exports[`html interpolation String interpolation 1`] = `
+"
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <div class=\\"foobar\\"><slot></slot></div>
+      "
+`;
+
+exports[`html interpolation String interpolation 2`] = `"<span>Foobar</span>"`;

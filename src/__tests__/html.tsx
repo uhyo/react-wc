@@ -4,68 +4,69 @@ import React, { Fragment } from "react";
 import { html, slot } from "..";
 
 describe("html", () => {
-  it("no slot", () => {
-    const Hello = html`
-      <style>
-        div {
-          font-size: 100px;
-        }
-      </style>
-      <div>Hello</div>
-    `;
+  describe("basic", () => {
+    it("no slot", () => {
+      const Hello = html`
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <div>Hello</div>
+      `;
 
-    render(<Hello />);
+      render(<Hello />);
 
-    const el = document.getElementsByTagName(Hello.elementName)[0];
+      const el = document.getElementsByTagName(Hello.elementName)[0];
 
-    expect(el.shadowRoot?.innerHTML).toMatchSnapshot();
-    expect(el.innerHTML).toMatchSnapshot();
+      expect(el.shadowRoot?.innerHTML).toMatchSnapshot();
+      expect(el.innerHTML).toMatchSnapshot();
+    });
+    it("one slot", () => {
+      const Hello = html`
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <div>${slot()}</div>
+      `;
+
+      render(
+        <Hello>
+          <span>Foobar</span>
+        </Hello>
+      );
+
+      const el = document.getElementsByTagName(Hello.elementName)[0];
+
+      expect(el.shadowRoot?.innerHTML).toMatchSnapshot();
+      expect(el.innerHTML).toMatchSnapshot();
+    });
+    it("multiple slots", () => {
+      const Hello = html`
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <header>${slot("header")}</header>
+        <div>${slot()}</div>
+        <header>${slot("footer")}</header>
+      `;
+
+      render(
+        <Hello header={<b>head!</b>} footer="foo!">
+          <span>Foobar</span>
+        </Hello>
+      );
+
+      const el = document.getElementsByTagName(Hello.elementName)[0];
+
+      expect(el.shadowRoot?.innerHTML).toMatchSnapshot();
+      expect(el.innerHTML).toMatchSnapshot();
+    });
   });
-  it("one slot", () => {
-    const Hello = html`
-      <style>
-        div {
-          font-size: 100px;
-        }
-      </style>
-      <div>${slot()}</div>
-    `;
-
-    render(
-      <Hello>
-        <span>Foobar</span>
-      </Hello>
-    );
-
-    const el = document.getElementsByTagName(Hello.elementName)[0];
-
-    expect(el.shadowRoot?.innerHTML).toMatchSnapshot();
-    expect(el.innerHTML).toMatchSnapshot();
-  });
-  it("multiple slots", () => {
-    const Hello = html`
-      <style>
-        div {
-          font-size: 100px;
-        }
-      </style>
-      <header>${slot("header")}</header>
-      <div>${slot()}</div>
-      <header>${slot("footer")}</header>
-    `;
-
-    render(
-      <Hello header={<b>head!</b>} footer="foo!">
-        <span>Foobar</span>
-      </Hello>
-    );
-
-    const el = document.getElementsByTagName(Hello.elementName)[0];
-
-    expect(el.shadowRoot?.innerHTML).toMatchSnapshot();
-    expect(el.innerHTML).toMatchSnapshot();
-  });
-
   describe("Named slot values", () => {
     const Hello = html`
       <style>
@@ -236,6 +237,30 @@ describe("html", () => {
 
       const el = document.getElementsByTagName(Hello.elementName)[0];
 
+      expect(el.innerHTML).toMatchSnapshot();
+    });
+  });
+  describe("interpolation", () => {
+    it("String interpolation", () => {
+      const className = "foobar";
+      const Hello = html`
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <div class=${className}>${slot()}</div>
+      `;
+
+      render(
+        <Hello>
+          <span>Foobar</span>
+        </Hello>
+      );
+
+      const el = document.getElementsByTagName(Hello.elementName)[0];
+
+      expect(el.shadowRoot?.innerHTML).toMatchSnapshot();
       expect(el.innerHTML).toMatchSnapshot();
     });
   });

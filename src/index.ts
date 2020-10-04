@@ -4,7 +4,10 @@ import { HtmlComponentProps } from "./HtmlComponentProps";
 import { makeChildren } from "./makeChildren";
 import { Slot } from "./Slot";
 import { slotNameSymbol } from "./symbol";
-import { resolveTemplateString } from "./util/resolveTemplateString";
+import {
+  HtmlInterpolationValue,
+  resolveTemplateString,
+} from "./util/resolveTemplateString";
 
 export type WCComponent<SlotName extends string> = React.FunctionComponent<
   HtmlComponentProps<SlotName>
@@ -17,7 +20,7 @@ export type WCComponent<SlotName extends string> = React.FunctionComponent<
  */
 export function html<SlotName extends string>(
   html: TemplateStringsArray,
-  ...values: readonly Slot<SlotName>[]
+  ...values: readonly HtmlInterpolationValue<SlotName>[]
 ): WCComponent<SlotName> {
   const elementName = generateElementName();
   let initFlag = false;
