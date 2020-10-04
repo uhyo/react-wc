@@ -9,7 +9,7 @@ export function applySlot(
   addedKey?: string | number
 ): React.ReactNode {
   if (Array.isArray(node)) {
-    const children = node.map((n) => applySlot(n, slotName));
+    const children = node.map((n, i) => applySlot(n, slotName, `wc-slot-${i}`));
     if (addedKey) {
       return React.createElement(
         React.Fragment,
@@ -39,19 +39,34 @@ export function applySlot(
     );
   }
   if (isReactElement(node)) {
-    if (typeof node.type === "string") {
+    const { type } = node;
+    if (typeof type === "string") {
       return {
         ...node,
-        type: node.type,
         props: {
           ...node.props,
           slot: slotName,
         },
         key: node.key ?? addedKey,
       };
+    } else if (typeof type === "symbol") {
+      const t: symbol = type;
+      /* istanbul ignore else */
+      if (t.description === "react.fragment") {
+        // react.fragment
+        return {
+          ...node,
+          props: {
+            ...node.props,
+            children: applySlot(node.props.children, slotName),
+          },
+          key: node.key ?? addedKey,
+        };
+      } else {
+        throw new Error("Could not handle node of type " + String(t));
+      }
     }
     const {
-      type,
       props: { children, ...props },
       key,
     } = node;
@@ -109,7 +124,7 @@ function makeWrapper(
 }
 
 function isReactElement(node: any): node is React.ReactElement {
-  return node.type !== undefined;
+  return node != null && node.type !== undefined;
 }
 
 function isClassComponent(
