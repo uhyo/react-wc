@@ -43,6 +43,7 @@ function replacer(char: string) {
       return "&quot;";
     case "'":
       return "&#39;";
+    /* istanbul ignore next */
     default:
       return char;
   }

@@ -264,4 +264,50 @@ describe("html", () => {
       expect(el.innerHTML).toMatchSnapshot();
     });
   });
+  describe("escape", () => {
+    it("escaping interpolated string", () => {
+      const Hello = html`
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <div class="${'"I am a <robot>" \'&!'}">${slot()}</div>
+        ${"<b>Hello, world!</b>"}
+      `;
+
+      render(
+        <Hello>
+          <span>Foobar</span>
+        </Hello>
+      );
+
+      const el = document.getElementsByTagName(Hello.elementName)[0];
+
+      expect(el.shadowRoot?.innerHTML).toMatchSnapshot();
+    });
+    it("escaping slot name", () => {
+      const Hello = html`
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <div>${slot('"<foo>"')}</div>
+      `;
+
+      render(
+        <Hello
+          {...{
+            '"<foo>"': <span>Foobar</span>,
+          }}
+        />
+      );
+
+      const el = document.getElementsByTagName(Hello.elementName)[0];
+
+      expect(el.shadowRoot?.innerHTML).toMatchSnapshot();
+      expect(el.innerHTML).toMatchSnapshot();
+    });
+  });
 });

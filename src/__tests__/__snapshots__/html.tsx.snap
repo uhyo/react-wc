@@ -67,6 +67,31 @@ exports[`html basic one slot 1`] = `
 
 exports[`html basic one slot 2`] = `"<span>Foobar</span>"`;
 
+exports[`html escape escaping interpolated string 1`] = `
+"
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <div class=\\"&quot;I am a <robot>&quot; '&amp;!\\"><slot></slot></div>
+        &lt;b&gt;Hello, world!&lt;/b&gt;
+      "
+`;
+
+exports[`html escape escaping slot name 1`] = `
+"
+        <style>
+          div {
+            font-size: 100px;
+          }
+        </style>
+        <div><slot name=\\"&quot;<foo>&quot;\\"></slot></div>
+      "
+`;
+
+exports[`html escape escaping slot name 2`] = `"<span slot=\\"&quot;<foo>&quot;\\">Foobar</span>"`;
+
 exports[`html interpolation String interpolation 1`] = `
 "
         <style>
