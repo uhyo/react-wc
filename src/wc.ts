@@ -4,7 +4,7 @@ import { makeChildren } from "./makeChildren";
 
 export type WcOptions<SlotName extends string> = {
   name: string;
-  html: string;
+  shadowHtml: string;
   slots: readonly SlotName[];
 };
 
@@ -13,7 +13,7 @@ export type WcOptions<SlotName extends string> = {
  */
 export function wc<SlotName extends string>({
   name,
-  html,
+  shadowHtml,
   slots,
 }: WcOptions<SlotName>): React.FunctionComponent<HtmlComponentProps<SlotName>> {
   let template: DocumentFragment | undefined;
@@ -22,7 +22,7 @@ export function wc<SlotName extends string>({
       const t = (template = document.createDocumentFragment());
       // parse HTML string into DOM nodes
       const div = document.createElement("div");
-      div.insertAdjacentHTML("afterbegin", html);
+      div.insertAdjacentHTML("afterbegin", shadowHtml);
       t.append(...div.childNodes);
       class Elm extends HTMLElement {
         constructor() {
