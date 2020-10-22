@@ -130,5 +130,5 @@ function isReactElement(node: any): node is React.ReactElement {
 function isClassComponent(
   element: React.JSXElementConstructor<any>
 ): element is new (props: any) => React.Component<any, any> {
-  return element.prototype instanceof React.Component;
+  return !!element.prototype && !!element.prototype.isReactComponent;
 }
