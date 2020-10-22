@@ -5,7 +5,7 @@ import { makeChildren } from "./makeChildren";
 export type WcOptions<SlotName extends string> = {
   name: string;
   shadowHtml: string;
-  slots: readonly SlotName[];
+  slots?: readonly SlotName[];
 };
 
 /**
