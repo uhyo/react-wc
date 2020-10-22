@@ -8,6 +8,7 @@ import {
   HtmlInterpolationValue,
   resolveTemplateString,
 } from "./util/resolveTemplateString";
+export { wc } from "./wc";
 
 export type WCComponent<SlotName extends string> = React.FunctionComponent<
   HtmlComponentProps<SlotName>

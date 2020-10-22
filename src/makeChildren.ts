@@ -3,7 +3,7 @@ import { HtmlComponentProps } from "./HtmlComponentProps";
 
 export function makeChildren<SlotName extends string>(
   props: React.PropsWithChildren<HtmlComponentProps<SlotName>>,
-  slotNames: readonly Exclude<SlotName, "children" | "">[]
+  slotNames: readonly SlotName[]
 ): React.ReactNode {
   if (slotNames.length === 0) {
     return props.children;
