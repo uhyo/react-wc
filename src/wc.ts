@@ -15,7 +15,14 @@ export type WcOptions<SlotName extends string> = {
    * Name of slots to accept.
    */
   slots?: readonly SlotName[];
+  /**
+   * Whether to emit Declarative Shadow DOM support.
+   */
+  declarativeShadowDOM?: boolean;
 };
+
+const clientDetected =
+  typeof window !== "undefined" && !!window.HTMLTemplateElement;
 
 /**
  * Create a React component from given HTML string and list of slot names.
@@ -24,10 +31,12 @@ export function wc<SlotName extends string>({
   name,
   shadowHtml,
   slots,
+  declarativeShadowDOM,
 }: WcOptions<SlotName>): React.FunctionComponent<HtmlComponentProps<SlotName>> {
   let template: DocumentFragment | undefined;
+  const emitDeclarativeShadowDOM = declarativeShadowDOM && !clientDetected;
   return (props: React.PropsWithChildren<HtmlComponentProps<SlotName>>) => {
-    if (!template) {
+    if (clientDetected && !template) {
       const t = (template = document.createDocumentFragment());
       // parse HTML string into DOM nodes
       const div = document.createElement("div");
@@ -43,7 +52,18 @@ export function wc<SlotName extends string>({
       }
       window.customElements.define(name, Elm);
     }
-    const children = makeChildren(props, slots);
+    const childrenFromProps = makeChildren(props, slots);
+    const children = emitDeclarativeShadowDOM
+      ? React.createElement(
+          React.Fragment,
+          {},
+          React.createElement("template", {
+            shadowroot: "open",
+            dangerouslySetInnerHTML: { __html: shadowHtml },
+          }),
+          childrenFromProps
+        )
+      : childrenFromProps;
     return React.createElement(name, {}, children);
   };
 }
@@ -64,6 +84,10 @@ export type WcIntrinsicOptions<
    * Name of slots to accept.
    */
   slots?: readonly SlotName[];
+  /**
+   * Whether to emit Declarative Shadow DOM support.
+   */
+  declarativeShadowDOM?: boolean;
 };
 
 /**
@@ -76,16 +100,18 @@ export function wcIntrinsic<
   element,
   shadowHtml,
   slots,
+  declarativeShadowDOM,
 }: WcIntrinsicOptions<SlotName, ElementName>): React.FunctionComponent<
   JSX.IntrinsicElements[ElementName] & HtmlComponentProps<SlotName>
 > {
   let template: DocumentFragment | undefined;
+  const emitDeclarativeShadowDOM = declarativeShadowDOM && !clientDetected;
   return (
     props: React.PropsWithChildren<
       JSX.IntrinsicElements[ElementName] & HtmlComponentProps<SlotName>
     >
   ) => {
-    if (!template) {
+    if (clientDetected && !template) {
       const t = (template = document.createDocumentFragment());
       // parse HTML string into DOM nodes
       const div = document.createElement("div");
@@ -93,21 +119,44 @@ export function wcIntrinsic<
       t.append(...div.childNodes);
     }
     const children = makeChildren(props, slots);
+    const declarativeShadowDOMChildren =
+      emitDeclarativeShadowDOM &&
+      React.createElement("template", {
+        shadowroot: "open",
+        dangerouslySetInnerHTML: { __html: shadowHtml },
+      });
 
     const elementRef = useRef<HTMLElement | null>(null);
 
-    const t = template;
-    useLayoutEffect(() => {
-      if (elementRef.current) {
-        elementRef.current
-          .attachShadow({ mode: "open" })
-          .appendChild(t.cloneNode(true));
-      }
-    }, []);
+    if (clientDetected) {
+      const t = template;
+      useLayoutEffect(() => {
+        /* istanbul ignore else */
+        if (elementRef.current) {
+          elementRef.current
+            .attachShadow({ mode: "open" })
+            .appendChild(t.cloneNode(true));
+        }
+      }, []);
+    }
 
-    return React.createElement(element, {
-      ...props,
-      ref: elementRef
-    }, children);
+    return declarativeShadowDOMChildren
+      ? React.createElement(
+          element,
+          {
+            ...props,
+            ref: elementRef,
+          },
+          declarativeShadowDOMChildren,
+          children
+        )
+      : React.createElement(
+          element,
+          {
+            ...props,
+            ref: elementRef,
+          },
+          children
+        );
   };
 }

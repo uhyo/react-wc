@@ -2,6 +2,8 @@ import React from "react";
 import { textNodeElementName } from "./generateElementName";
 
 let textElementRegistered = false;
+const hasCustomElements =
+  typeof window !== "undefined" && !!window.customElements;
 
 export function applySlot(
   node: React.ReactNode,
@@ -24,10 +26,12 @@ export function applySlot(
   if (typeof node !== "object") {
     if (!textElementRegistered) {
       textElementRegistered = true;
-      window.customElements.define(
-        textNodeElementName,
-        class extends HTMLElement {}
-      );
+      if (hasCustomElements) {
+        window.customElements.define(
+          textNodeElementName,
+          class extends HTMLElement {}
+        );
+      }
     }
     return React.createElement(
       textNodeElementName,
