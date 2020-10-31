@@ -45,7 +45,7 @@ describe("declarativeShadowDOM", () => {
         declarativeShadowDOM: true,
       });
 
-      const str = renderToString(<Hello foo={<span>Hi</span>} bar="wow" />);
+      const str = renderToString(<Hello foo={<span>Hi</span>} />);
 
       expect(str).toMatchSnapshot();
     });
