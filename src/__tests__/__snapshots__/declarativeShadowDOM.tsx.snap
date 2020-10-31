@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`declarativeShadowDOM wc named slot 1`] = `
+"<wc-test-2 data-reactroot=\\"\\"><template shadowroot=\\"open\\">
+          <style>
+            div {
+              font-size: 100px;
+            }
+          </style>
+          <slot name=\\"foo\\"></slot>
+      </template><span slot=\\"foo\\">Hi</span></wc-test-2>"
+`;
+
 exports[`declarativeShadowDOM wc one slot 1`] = `
 "<wc-test-foo data-reactroot=\\"\\"><template shadowroot=\\"open\\">
           <style>
@@ -11,8 +22,19 @@ exports[`declarativeShadowDOM wc one slot 1`] = `
       </template><span>Foobar</span></wc-test-foo>"
 `;
 
+exports[`declarativeShadowDOM wcIntrinsic one slot 1`] = `
+"<span data-reactroot=\\"\\"><template shadowroot=\\"open\\">
+          <style>
+            :host {
+              color: red;
+            }
+          </style>
+          <slot></slot>
+      </template><span>Foobar</span></span>"
+`;
+
 exports[`declarativeShadowDOM wcIntrinsic two slots 1`] = `
-"<div foo=\\"[object Object]\\" bar=\\"wow\\" data-reactroot=\\"\\"><template shadowroot=\\"open\\">
+"<div data-reactroot=\\"\\"><template shadowroot=\\"open\\">
           <style>
             div {
               font-size: 100px;

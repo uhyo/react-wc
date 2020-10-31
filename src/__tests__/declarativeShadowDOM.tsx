@@ -30,8 +30,50 @@ describe("declarativeShadowDOM", () => {
 
       expect(str).toMatchSnapshot();
     });
+    it("named slot", () => {
+      const Hello = wc({
+        shadowHtml: `
+          <style>
+            div {
+              font-size: 100px;
+            }
+          </style>
+          <slot name="foo"></slot>
+      `,
+        slots: ["foo"],
+        name: "wc-test-2",
+        declarativeShadowDOM: true,
+      });
+
+      const str = renderToString(<Hello foo={<span>Hi</span>} bar="wow" />);
+
+      expect(str).toMatchSnapshot();
+    });
   });
   describe("wcIntrinsic", () => {
+    it("one slot", () => {
+      const Hello = wcIntrinsic({
+        shadowHtml: `
+          <style>
+            :host {
+              color: red;
+            }
+          </style>
+          <slot></slot>
+      `,
+        slots: [],
+        element: "span",
+        declarativeShadowDOM: true,
+      });
+
+      const str = renderToString(
+        <Hello>
+          <span>Foobar</span>
+        </Hello>
+      );
+
+      expect(str).toMatchSnapshot();
+    });
     it("two slots", () => {
       const Hello = wcIntrinsic({
         shadowHtml: `

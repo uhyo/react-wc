@@ -129,7 +129,8 @@ export function wcIntrinsic<
     const elementRef = useRef<HTMLElement | null>(null);
 
     if (clientDetected) {
-      const t = template;
+      // `template` is initialized when clientDetected
+      const t = template!;
       useLayoutEffect(() => {
         /* istanbul ignore else */
         if (elementRef.current) {
@@ -140,23 +141,21 @@ export function wcIntrinsic<
       }, []);
     }
 
+    const renderedProps: any = { ...props };
+    if (slots) {
+      for (const slot of slots) {
+        renderedProps[slot] = undefined;
+      }
+    }
+    renderedProps.ref = elementRef;
+
     return declarativeShadowDOMChildren
       ? React.createElement(
           element,
-          {
-            ...props,
-            ref: elementRef,
-          },
+          renderedProps,
           declarativeShadowDOMChildren,
           children
         )
-      : React.createElement(
-          element,
-          {
-            ...props,
-            ref: elementRef,
-          },
-          children
-        );
+      : React.createElement(element, renderedProps, children);
   };
 }
