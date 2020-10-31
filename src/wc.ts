@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef } from "react";
 import { HtmlComponentProps } from "./HtmlComponentProps";
 import { makeChildren } from "./makeChildren";
+import { parseTemplate } from "./parseTemplate";
 
 export type WcOptions<SlotName extends string> = {
   /**
@@ -33,24 +34,45 @@ export function wc<SlotName extends string>({
   slots,
   declarativeShadowDOM,
 }: WcOptions<SlotName>): React.FunctionComponent<HtmlComponentProps<SlotName>> {
-  let template: DocumentFragment | undefined;
+  let Elm:
+    | {
+        template: DocumentFragment;
+      }
+    | undefined;
   const emitDeclarativeShadowDOM = declarativeShadowDOM && !clientDetected;
   return (props: React.PropsWithChildren<HtmlComponentProps<SlotName>>) => {
-    if (clientDetected && !template) {
-      const t = (template = document.createDocumentFragment());
-      // parse HTML string into DOM nodes
-      const div = document.createElement("div");
-      div.insertAdjacentHTML("afterbegin", shadowHtml);
-      t.append(...div.childNodes);
-      class Elm extends HTMLElement {
-        constructor() {
-          super();
-          this.attachShadow({
-            mode: "open",
-          }).appendChild(t.cloneNode(true));
-        }
+    if (clientDetected && !Elm) {
+      const template = parseTemplate(shadowHtml);
+
+      const registered = window.customElements.get(name);
+      if (registered) {
+        // this may happen when the component is loaded by something like fast refresh.
+        registered.template = template;
+        Elm = registered;
+        document.querySelectorAll(name).forEach((elm) => {
+          (elm as any).refresh();
+        });
+      } else {
+        const E = class Elm extends HTMLElement {
+          static template = template;
+          constructor() {
+            super();
+            this.attachShadow({
+              mode: "open",
+            }).appendChild(E.template.cloneNode(true));
+          }
+          refresh() {
+            if (this.shadowRoot) {
+              while (this.shadowRoot.firstChild) {
+                this.shadowRoot.removeChild(this.shadowRoot.firstChild);
+              }
+              this.shadowRoot.appendChild(E.template.cloneNode(true));
+            }
+          }
+        };
+        Elm = E;
+        window.customElements.define(name, E);
       }
-      window.customElements.define(name, Elm);
     }
     const childrenFromProps = makeChildren(props, slots);
     const children = emitDeclarativeShadowDOM
@@ -112,11 +134,7 @@ export function wcIntrinsic<
     >
   ) => {
     if (clientDetected && !template) {
-      const t = (template = document.createDocumentFragment());
-      // parse HTML string into DOM nodes
-      const div = document.createElement("div");
-      div.insertAdjacentHTML("afterbegin", shadowHtml);
-      t.append(...div.childNodes);
+      template = parseTemplate(shadowHtml);
     }
     const children = makeChildren(props, slots);
     const declarativeShadowDOMChildren =
