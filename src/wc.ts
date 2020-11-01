@@ -1,7 +1,12 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useContext, useLayoutEffect, useRef } from "react";
+import {
+  customElementBaseClassTemplate,
+  CustomElementClass,
+} from "./customElementClassTemplate";
 import { HtmlComponentProps } from "./HtmlComponentProps";
 import { makeChildren } from "./makeChildren";
 import { parseTemplate } from "./parseTemplate";
+import { ServerRenderingContext } from "./ssr";
 
 export type WcOptions<SlotName extends string> = {
   /**
@@ -20,10 +25,19 @@ export type WcOptions<SlotName extends string> = {
    * Whether to emit Declarative Shadow DOM support.
    */
   declarativeShadowDOM?: boolean;
+  /**
+   * Whether to enable classic SSR support.
+   */
+  classicSSR?: boolean;
 };
 
 const clientDetected =
   typeof window !== "undefined" && !!window.HTMLTemplateElement;
+
+const getCustomElementClass = new Function(
+  "template",
+  `const E = ${customElementBaseClassTemplate}; E.template = template; return E`
+) as (template: DocumentFragment) => CustomElementClass;
 
 /**
  * Create a React component from given HTML string and list of slot names.
@@ -33,12 +47,10 @@ export function wc<SlotName extends string>({
   shadowHtml,
   slots,
   declarativeShadowDOM,
+  classicSSR,
 }: WcOptions<SlotName>): React.FunctionComponent<HtmlComponentProps<SlotName>> {
-  let Elm:
-    | {
-        template: DocumentFragment;
-      }
-    | undefined;
+  let Elm: CustomElementClass | undefined;
+  let ssrInitialized = false;
   const emitDeclarativeShadowDOM = declarativeShadowDOM && !clientDetected;
   return (props: React.PropsWithChildren<HtmlComponentProps<SlotName>>) => {
     if (clientDetected && !Elm) {
@@ -53,26 +65,16 @@ export function wc<SlotName extends string>({
           (elm as any).refresh();
         });
       } else {
-        const E = class Elm extends HTMLElement {
-          static template = template;
-          constructor() {
-            super();
-            this.attachShadow({
-              mode: "open",
-            }).appendChild(E.template.cloneNode(true));
-          }
-          refresh() {
-            if (this.shadowRoot) {
-              while (this.shadowRoot.firstChild) {
-                this.shadowRoot.removeChild(this.shadowRoot.firstChild);
-              }
-              this.shadowRoot.appendChild(E.template.cloneNode(true));
-            }
-          }
-        };
-        Elm = E;
-        window.customElements.define(name, E);
+        Elm = getCustomElementClass(template);
+        window.customElements.define(name, Elm);
       }
+    }
+    if (classicSSR && !clientDetected) {
+      const collector = useContext(ServerRenderingContext);
+      if (collector && !ssrInitialized) {
+        collector.addScriptForCustomElement(name, shadowHtml);
+      }
+      ssrInitialized = true;
     }
     const childrenFromProps = makeChildren(props, slots);
     const children = emitDeclarativeShadowDOM
